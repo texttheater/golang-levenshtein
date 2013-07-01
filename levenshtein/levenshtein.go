@@ -13,13 +13,13 @@ const (
 	match
 )
 
-type MatchFunctionType func(rune, rune) bool
+type MatchFunction func(rune, rune) bool
 
 type Options struct {
 	InsCost		int
 	DelCost		int
 	SubCost		int
-	Matches		MatchFunctionType
+	Matches		MatchFunction
 }
 
 // DefaultOptions is the default options: insertion cost is 1, deletion cost is
