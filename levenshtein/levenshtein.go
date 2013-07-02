@@ -7,10 +7,10 @@ import (
 
 type EditOperation int
 const (
-	ins = iota
-	del
-	sub
-	match
+	Ins = iota
+	Del
+	Sub
+	Match
 )
 
 type EditScript []EditOperation
@@ -36,11 +36,11 @@ var DefaultOptions Options = Options {
 }
 
 func (operation EditOperation) String() string {
-	if operation == match {
+	if operation == Match {
 		return "match"
-	} else if operation == ins {
+	} else if operation == Ins {
 		return "ins"
-	} else if operation == sub {
+	} else if operation == Sub {
 		return "sub"
 	}
 	return "del"
@@ -137,16 +137,16 @@ func LogMatrix(source []rune, target []rune, matrix [][]int) {
 
 func backtrace(i int, j int, matrix [][]int, op Options) EditScript {
 	if i > 0 && matrix[i - 1][j] + op.DelCost == matrix[i][j] {
-		return append(backtrace(i - 1, j, matrix, op), del)
+		return append(backtrace(i - 1, j, matrix, op), Del)
 	}
 	if j > 0 && matrix[i][j - 1] + op.InsCost == matrix[i][j] {
-		return append(backtrace(i, j - 1, matrix, op), ins)
+		return append(backtrace(i, j - 1, matrix, op), Ins)
 	}
 	if i > 0 && j > 0 && matrix[i - 1][j - 1] + op.SubCost == matrix[i][j] {
-		return append(backtrace(i - 1, j - 1, matrix, op), sub)
+		return append(backtrace(i - 1, j - 1, matrix, op), Sub)
 	}
 	if i > 0 && j > 0 && matrix[i - 1][j - 1] == matrix[i][j] {
-		return append(backtrace(i - 1, j - 1, matrix, op), match)
+		return append(backtrace(i - 1, j - 1, matrix, op), Match)
 	}
 	return []EditOperation{}
 }
