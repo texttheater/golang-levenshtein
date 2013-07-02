@@ -13,6 +13,8 @@ const (
 	match
 )
 
+type EditScript []EditOperation
+
 type MatchFunction func(rune, rune) bool
 
 type Options struct {
@@ -33,7 +35,16 @@ var DefaultOptions Options = Options {
 			},
 }
 
-type EditScript []EditOperation
+func (operation EditOperation) String() string {
+	if operation == match {
+		return "match"
+	} else if operation == ins {
+		return "ins"
+	} else if operation == sub {
+		return "sub"
+	}
+	return "del"
+}
 
 // DistanceForStrings returns the edit distance between source and target.
 func DistanceForStrings(source []rune, target []rune, op Options) int {
@@ -122,18 +133,6 @@ func LogMatrix(source []rune, target []rune, matrix [][]int) {
 		}
 		fmt.Fprintf(os.Stderr, "\n")
 	}
-}
-
-// TODO use this for providing a string representation of edit scripts?
-func opString(operation EditOperation) string {
-	if operation == match {
-		return "match"
-	} else if operation == ins {
-		return "ins"
-	} else if operation == sub {
-		return "sub"
-	}
-	return "del"
 }
 
 func backtrace(i int, j int, matrix [][]int, op Options) EditScript {
