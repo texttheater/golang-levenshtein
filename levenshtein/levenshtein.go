@@ -48,13 +48,12 @@ func (operation EditOperation) String() string {
 
 // DistanceForStrings returns the edit distance between source and target.
 func DistanceForStrings(source []rune, target []rune, op Options) int {
-	matrix := MatrixForStrings(source, target, op)
-	return matrix[len(target)][len(source)]
+	return DistanceForMatrix(MatrixForStrings(source, target, op))
 }
 
 // DistanceForMatrix reads the edit distance off the given Levenshtein matrix.
 func DistanceForMatrix(matrix [][]int) int {
-	return matrix[len(matrix[0]) - 1][len(matrix) - 1]
+	return matrix[len(matrix) - 1][len(matrix[0]) - 1]
 }
 
 // MatrixForStrings generates a 2-D array representing the dynamic programming
