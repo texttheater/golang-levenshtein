@@ -6,6 +6,7 @@ import (
 )
 
 type EditOperation int
+
 const (
 	Ins = iota
 	Del
@@ -18,21 +19,21 @@ type EditScript []EditOperation
 type MatchFunction func(rune, rune) bool
 
 type Options struct {
-	InsCost		int
-	DelCost		int
-	SubCost		int
-	Matches		MatchFunction
+	InsCost int
+	DelCost int
+	SubCost int
+	Matches MatchFunction
 }
 
 // DefaultOptions is the default options: insertion cost is 1, deletion cost is
 // 1, substitution cost is 2, and two runes match iff they are the same.
-var DefaultOptions Options = Options {
-	InsCost:	1,
-	DelCost:	1,
-	SubCost:	2,
-	Matches:	func (sourceCharacter rune, targetCharacter rune) bool {
-				return sourceCharacter == targetCharacter
-			},
+var DefaultOptions Options = Options{
+	InsCost: 1,
+	DelCost: 1,
+	SubCost: 2,
+	Matches: func(sourceCharacter rune, targetCharacter rune) bool {
+		return sourceCharacter == targetCharacter
+	},
 }
 
 func (operation EditOperation) String() string {
@@ -53,7 +54,7 @@ func DistanceForStrings(source []rune, target []rune, op Options) int {
 
 // DistanceForMatrix reads the edit distance off the given Levenshtein matrix.
 func DistanceForMatrix(matrix [][]int) int {
-	return matrix[len(matrix) - 1][len(matrix[0]) - 1]
+	return matrix[len(matrix)-1][len(matrix[0])-1]
 }
 
 // MatrixForStrings generates a 2-D array representing the dynamic programming
@@ -85,14 +86,14 @@ func MatrixForStrings(source []rune, target []rune, op Options) [][]int {
 	// (edit history, operation) pair with the lowest cost.
 	for i := 1; i < height; i++ {
 		for j := 1; j < width; j++ {
-			delCost := matrix[i - 1][j] + op.DelCost
-			matchSubCost := matrix[i - 1][j - 1]
-			if !op.Matches(source[i - 1], target[j - 1]) {
+			delCost := matrix[i-1][j] + op.DelCost
+			matchSubCost := matrix[i-1][j-1]
+			if !op.Matches(source[i-1], target[j-1]) {
 				matchSubCost += op.SubCost
 			}
-			insCost := matrix[i][j - 1] + op.InsCost
+			insCost := matrix[i][j-1] + op.InsCost
 			matrix[i][j] = min(delCost, min(matchSubCost,
-					insCost))
+				insCost))
 		}
 	}
 	//LogMatrix(source, target, matrix)
@@ -103,13 +104,13 @@ func MatrixForStrings(source []rune, target []rune, op Options) [][]int {
 // target.
 func EditScriptForStrings(source []rune, target []rune, op Options) EditScript {
 	return backtrace(len(source), len(target),
-			MatrixForStrings(source, target, op), op)
+		MatrixForStrings(source, target, op), op)
 }
 
 // EditScriptForMatrix returns an optimal edit script based on the given
 // Levenshtein matrix.
 func EditScriptForMatrix(matrix [][]int, op Options) EditScript {
-	return backtrace(len(matrix[0]) - 1, len(matrix) - 1, matrix, op)
+	return backtrace(len(matrix[0])-1, len(matrix)-1, matrix, op)
 }
 
 // LogMatrix outputs a visual representation of the given matrix for the given
@@ -122,30 +123,30 @@ func LogMatrix(source []rune, target []rune, matrix [][]int) {
 	fmt.Fprintf(os.Stderr, "\n")
 	fmt.Fprintf(os.Stderr, "  %2d", matrix[0][0])
 	for j, _ := range target {
-		fmt.Fprintf(os.Stderr, " %2d", matrix[0][j + 1])
+		fmt.Fprintf(os.Stderr, " %2d", matrix[0][j+1])
 	}
 	fmt.Fprintf(os.Stderr, "\n")
 	for i, sourceRune := range source {
-		fmt.Fprintf(os.Stderr, "%c %2d", sourceRune, matrix[i + 1][0])
+		fmt.Fprintf(os.Stderr, "%c %2d", sourceRune, matrix[i+1][0])
 		for j, _ := range target {
-			fmt.Fprintf(os.Stderr, " %2d", matrix[i + 1][j + 1])
+			fmt.Fprintf(os.Stderr, " %2d", matrix[i+1][j+1])
 		}
 		fmt.Fprintf(os.Stderr, "\n")
 	}
 }
 
 func backtrace(i int, j int, matrix [][]int, op Options) EditScript {
-	if i > 0 && matrix[i - 1][j] + op.DelCost == matrix[i][j] {
-		return append(backtrace(i - 1, j, matrix, op), Del)
+	if i > 0 && matrix[i-1][j]+op.DelCost == matrix[i][j] {
+		return append(backtrace(i-1, j, matrix, op), Del)
 	}
-	if j > 0 && matrix[i][j - 1] + op.InsCost == matrix[i][j] {
-		return append(backtrace(i, j - 1, matrix, op), Ins)
+	if j > 0 && matrix[i][j-1]+op.InsCost == matrix[i][j] {
+		return append(backtrace(i, j-1, matrix, op), Ins)
 	}
-	if i > 0 && j > 0 && matrix[i - 1][j - 1] + op.SubCost == matrix[i][j] {
-		return append(backtrace(i - 1, j - 1, matrix, op), Sub)
+	if i > 0 && j > 0 && matrix[i-1][j-1]+op.SubCost == matrix[i][j] {
+		return append(backtrace(i-1, j-1, matrix, op), Sub)
 	}
-	if i > 0 && j > 0 && matrix[i - 1][j - 1] == matrix[i][j] {
-		return append(backtrace(i - 1, j - 1, matrix, op), Match)
+	if i > 0 && j > 0 && matrix[i-1][j-1] == matrix[i][j] {
+		return append(backtrace(i-1, j-1, matrix, op), Match)
 	}
 	return []EditOperation{}
 }
