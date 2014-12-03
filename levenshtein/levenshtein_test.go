@@ -1,7 +1,7 @@
 package levenshtein_test
 
 import (
-	"golang-levenshtein/levenshtein"
+	"github.com/texttheater/golang-levenshtein/levenshtein"
 	"testing"
 )
 
