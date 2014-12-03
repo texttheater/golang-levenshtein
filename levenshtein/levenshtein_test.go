@@ -6,8 +6,8 @@ import (
 )
 
 var testCases = []struct {
-	source string
-	target string
+	source   string
+	target   string
 	distance int
 }{
 	{"", "a", 1},
@@ -27,19 +27,19 @@ var testCases = []struct {
 func TestLevenshtein(t *testing.T) {
 	for _, testCase := range testCases {
 		distance := levenshtein.DistanceForStrings(
-				[]rune(testCase.source),
-				[]rune(testCase.target),
-				levenshtein.DefaultOptions)
+			[]rune(testCase.source),
+			[]rune(testCase.target),
+			levenshtein.DefaultOptions)
 		if distance != testCase.distance {
 			t.Log(
-					"Distance between",
-					testCase.source,
-					"and",
-					testCase.target,
-					"computed as",
-					distance,
-					", should be",
-					testCase.distance)
+				"Distance between",
+				testCase.source,
+				"and",
+				testCase.target,
+				"computed as",
+				distance,
+				", should be",
+				testCase.distance)
 			t.Fail()
 		}
 	}
