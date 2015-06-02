@@ -61,7 +61,7 @@ func DistanceForMatrix(matrix [][]int) int {
 // table used by the Levenshtein algorithm, as described e.g. here:
 // http://www.let.rug.nl/kleiweg/lev/
 // The reason for putting the creation of the table into a separate function is
-// that is cannot only be used for reading of the edit distance between two
+// that it cannot only be used for reading of the edit distance between two
 // strings, but also e.g. to backtrace an edit script that provides an
 // alignment between the characters of both strings.
 func MatrixForStrings(source []rune, target []rune, op Options) [][]int {
