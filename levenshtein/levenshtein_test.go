@@ -1,7 +1,7 @@
-package levenshtein_test
+package levenshtein
 
 import (
-	"github.com/texttheater/golang-levenshtein/levenshtein"
+	"fmt"
 	"testing"
 )
 
@@ -24,12 +24,12 @@ var testCases = []struct {
 	{"aaa", "a", 2},
 }
 
-func TestLevenshtein(t *testing.T) {
+func TestDistanceForStrings(t *testing.T) {
 	for _, testCase := range testCases {
-		distance := levenshtein.DistanceForStrings(
+		distance := DistanceForStrings(
 			[]rune(testCase.source),
 			[]rune(testCase.target),
-			levenshtein.DefaultOptions)
+			DefaultOptions)
 		if distance != testCase.distance {
 			t.Log(
 				"Distance between",
@@ -43,4 +43,12 @@ func TestLevenshtein(t *testing.T) {
 			t.Fail()
 		}
 	}
+}
+
+func ExampleDistanceForStrings() {
+	source := "a"
+	target := "aa"
+	distance := DistanceForStrings([]rune(source), []rune(target), DefaultOptions)
+	fmt.Printf(`Distance between "%s" and "%s" computed as %d`, source, target, distance)
+	// Output: Distance between "a" and "aa" computed as 1
 }
