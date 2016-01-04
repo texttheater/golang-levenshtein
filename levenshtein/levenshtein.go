@@ -2,6 +2,7 @@ package levenshtein
 
 import (
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -113,26 +114,33 @@ func EditScriptForMatrix(matrix [][]int, op Options) EditScript {
 	return backtrace(len(matrix[0])-1, len(matrix)-1, matrix, op)
 }
 
-// LogMatrix outputs a visual representation of the given matrix for the given
-// strings on os.Stderr.
-func LogMatrix(source []rune, target []rune, matrix [][]int) {
-	fmt.Fprintf(os.Stderr, "    ")
+// WriteMatrix writes a visual representation of the given matrix for the given
+// strings to the given writer.
+func WriteMatrix(source []rune, target []rune, matrix [][]int, writer io.Writer) {
+	fmt.Fprintf(writer, "    ")
 	for _, targetRune := range target {
-		fmt.Fprintf(os.Stderr, "  %c", targetRune)
+		fmt.Fprintf(writer, "  %c", targetRune)
 	}
-	fmt.Fprintf(os.Stderr, "\n")
-	fmt.Fprintf(os.Stderr, "  %2d", matrix[0][0])
+	fmt.Fprintf(writer, "\n")
+	fmt.Fprintf(writer, "  %2d", matrix[0][0])
 	for j, _ := range target {
-		fmt.Fprintf(os.Stderr, " %2d", matrix[0][j+1])
+		fmt.Fprintf(writer, " %2d", matrix[0][j+1])
 	}
-	fmt.Fprintf(os.Stderr, "\n")
+	fmt.Fprintf(writer, "\n")
 	for i, sourceRune := range source {
-		fmt.Fprintf(os.Stderr, "%c %2d", sourceRune, matrix[i+1][0])
+		fmt.Fprintf(writer, "%c %2d", sourceRune, matrix[i+1][0])
 		for j, _ := range target {
-			fmt.Fprintf(os.Stderr, " %2d", matrix[i+1][j+1])
+			fmt.Fprintf(writer, " %2d", matrix[i+1][j+1])
 		}
-		fmt.Fprintf(os.Stderr, "\n")
+		fmt.Fprintf(writer, "\n")
 	}
+}
+
+// LogMatrix writes a visual representation of the given matrix for the given
+// strings to os.Stderr. This function is deprecated, use
+// WriteMatrix(source, target, matrix, os.Stderr) instead.
+func LogMatrix(source []rune, target []rune, matrix [][]int) {
+	WriteMatrix(source, target, matrix, os.Stderr)
 }
 
 func backtrace(i int, j int, matrix [][]int, op Options) EditScript {
