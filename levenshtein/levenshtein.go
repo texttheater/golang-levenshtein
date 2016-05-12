@@ -111,7 +111,7 @@ func EditScriptForStrings(source []rune, target []rune, op Options) EditScript {
 // EditScriptForMatrix returns an optimal edit script based on the given
 // Levenshtein matrix.
 func EditScriptForMatrix(matrix [][]int, op Options) EditScript {
-	return backtrace(len(matrix[0])-1, len(matrix)-1, matrix, op)
+	return backtrace(len(matrix)-1, len(matrix[0])-1, matrix, op)
 }
 
 // WriteMatrix writes a visual representation of the given matrix for the given
