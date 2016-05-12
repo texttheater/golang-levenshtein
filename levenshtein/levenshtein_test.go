@@ -10,19 +10,20 @@ var testCases = []struct {
 	source   string
 	target   string
 	distance int
+	script   EditScript
 }{
-	{"", "a", 1},
-	{"a", "aa", 1},
-	{"a", "aaa", 2},
-	{"", "", 0},
-	{"a", "b", 2},
-	{"aaa", "aba", 2},
-	{"aaa", "ab", 3},
-	{"a", "a", 0},
-	{"ab", "ab", 0},
-	{"a", "", 1},
-	{"aa", "a", 1},
-	{"aaa", "a", 2},
+	{"", "a", 1, EditScript{Ins}},
+	{"a", "aa", 1, EditScript{Match, Ins}},
+	{"a", "aaa", 2, EditScript{Match, Ins, Ins}},
+	{"", "", 0, EditScript{}},
+	{"a", "b", 2, EditScript{Ins, Del}},
+	{"aaa", "aba", 2, EditScript{Match, Ins, Match, Del}},
+	{"aaa", "ab", 3, EditScript{Match, Ins, Del, Del}},
+	{"a", "a", 0, EditScript{Match}},
+	{"ab", "ab", 0, EditScript{Match, Match}},
+	{"a", "", 1, EditScript{Del}},
+	{"aa", "a", 1, EditScript{Match, Del}},
+	{"aaa", "a", 2, EditScript{Match, Del, Del}},
 }
 
 func TestDistanceForStrings(t *testing.T) {
@@ -44,6 +45,36 @@ func TestDistanceForStrings(t *testing.T) {
 			t.Fail()
 		}
 	}
+}
+
+func TestEditScriptForStrings(t *testing.T) {
+	for _, testCase := range testCases {
+		script := EditScriptForStrings(
+			[]rune(testCase.source),
+			[]rune(testCase.target),
+			DefaultOptions)
+		if !equal(script, testCase.script) {
+			t.Log(
+				"Edit script from",
+				testCase.source,
+				"to",
+				testCase.target,
+				"computed as",
+				script,
+				", should be",
+				testCase.script)
+			t.Fail()
+		}
+	}
+}
+
+func equal(a, b EditScript) bool {
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func ExampleDistanceForStrings() {
