@@ -10,20 +10,110 @@ var testCases = []struct {
 	source   string
 	target   string
 	distance int
+	ratio    float64
 	script   EditScript
 }{
-	{"", "a", 1, EditScript{Ins}},
-	{"a", "aa", 1, EditScript{Match, Ins}},
-	{"a", "aaa", 2, EditScript{Match, Ins, Ins}},
-	{"", "", 0, EditScript{}},
-	{"a", "b", 2, EditScript{Ins, Del}},
-	{"aaa", "aba", 2, EditScript{Match, Ins, Match, Del}},
-	{"aaa", "ab", 3, EditScript{Match, Ins, Del, Del}},
-	{"a", "a", 0, EditScript{Match}},
-	{"ab", "ab", 0, EditScript{Match, Match}},
-	{"a", "", 1, EditScript{Del}},
-	{"aa", "a", 1, EditScript{Match, Del}},
-	{"aaa", "a", 2, EditScript{Match, Del, Del}},
+	{
+		source:   "",
+		target:   "a",
+		distance: 1,
+		ratio:    0.0,
+		script:   EditScript{Ins},
+	},
+	{
+		source:   "a",
+		target:   "aa",
+		distance: 1,
+		ratio:    0.6666666666666666,
+		script:   EditScript{Match, Ins},
+	},
+	{
+		source:   "a",
+		target:   "aaa",
+		distance: 2,
+		ratio:    0.5,
+		script:   EditScript{Match, Ins, Ins},
+	},
+	{
+		source:   "",
+		target:   "",
+		distance: 0,
+		ratio:    0,
+		script:   EditScript{},
+	},
+	{
+		source:   "a",
+		target:   "b",
+		distance: 2,
+		ratio:    0,
+		script:   EditScript{Ins, Del},
+	},
+	{
+		source:   "aaa",
+		target:   "aba",
+		distance: 2,
+		ratio:    0.6666666666666666,
+		script:   EditScript{Match, Ins, Match, Del},
+	},
+	{
+		source:   "aaa",
+		target:   "ab",
+		distance: 3,
+		ratio:    0.4,
+		script:   EditScript{Match, Ins, Del, Del},
+	},
+	{
+		source:   "a",
+		target:   "a",
+		distance: 0,
+		ratio:    1,
+		script:   EditScript{Match},
+	},
+	{
+		source:   "ab",
+		target:   "ab",
+		distance: 0,
+		ratio:    1,
+		script:   EditScript{Match, Match},
+	},
+	{
+		source:   "a",
+		target:   "",
+		distance: 1,
+		ratio:    0,
+		script:   EditScript{Del},
+	},
+	{
+		source:   "aa",
+		target:   "a",
+		distance: 1,
+		ratio:    0.6666666666666666,
+		script:   EditScript{Match, Del},
+	},
+	{
+		source:   "aaa",
+		target:   "a",
+		distance: 2,
+		ratio:    0.5,
+		script:   EditScript{Match, Del, Del},
+	},
+	{
+		source:   "kitten",
+		target:   "sitting",
+		distance: 5,
+		ratio:    0.6153846153846154,
+		script: EditScript{
+			Ins,
+			Del,
+			Match,
+			Match,
+			Match,
+			Ins,
+			Del,
+			Match,
+			Ins,
+		},
+	},
 }
 
 func TestDistanceForStrings(t *testing.T) {
@@ -42,6 +132,27 @@ func TestDistanceForStrings(t *testing.T) {
 				distance,
 				", should be",
 				testCase.distance)
+			t.Fail()
+		}
+	}
+}
+
+func TestRatio(t *testing.T) {
+	for _, testCase := range testCases {
+		ratio := Ratio(
+			[]rune(testCase.source),
+			[]rune(testCase.target),
+			DefaultOptions)
+		if ratio != testCase.ratio {
+			t.Log(
+				"Ratio between",
+				testCase.source,
+				"and",
+				testCase.target,
+				"computed as",
+				ratio,
+				", should be",
+				testCase.ratio)
 			t.Fail()
 		}
 	}

@@ -53,6 +53,17 @@ func DistanceForStrings(source []rune, target []rune, op Options) int {
 	return DistanceForMatrix(MatrixForStrings(source, target, op))
 }
 
+// Ratio returns the ration between the source and target
+func Ratio(source []rune, target []rune, op Options) float64 {
+	sum := len(source) + len(target)
+	if sum == 0 {
+		return 0
+	}
+
+	dist := DistanceForStrings(source, target, op)
+	return float64((sum - dist)) / float64(sum)
+}
+
 // DistanceForMatrix reads the edit distance off the given Levenshtein matrix.
 func DistanceForMatrix(matrix [][]int) int {
 	return matrix[len(matrix)-1][len(matrix[0])-1]
