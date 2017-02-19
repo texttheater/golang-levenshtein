@@ -53,20 +53,35 @@ func DistanceForStrings(source []rune, target []rune, op Options) int {
 	return DistanceForMatrix(MatrixForStrings(source, target, op))
 }
 
-// Ratio returns the ration between the source and target
-func Ratio(source []rune, target []rune, op Options) float64 {
-	sum := len(source) + len(target)
+// DistanceForMatrix reads the edit distance off the given Levenshtein matrix.
+func DistanceForMatrix(matrix [][]int) int {
+	return matrix[len(matrix)-1][len(matrix[0])-1]
+}
+
+// RatioForStrings returns the Levenshtein ratio for the given strings. The
+// ratio is computed as follows:
+//
+//     (sourceLength + targetLength - distance) / (sourceLength + targetLength)
+func RatioForStrings(source []rune, target []rune, op Options) float64 {
+	matrix := MatrixForStrings(source, target, op)
+	return RatioForMatrix(matrix)
+}
+
+// RatioForMatrix returns the Levenshtein ratio for the given matrix. The ratio
+// is computed as follows:
+//
+//     (sourceLength + targetLength - distance) / (sourceLength + targetLength)
+func RatioForMatrix(matrix [][]int) float64 {
+	sourcelength := len(matrix) - 1
+	targetlength := len(matrix[0]) - 1
+	sum := sourcelength + targetlength
+
 	if sum == 0 {
 		return 0
 	}
 
-	dist := DistanceForStrings(source, target, op)
-	return float64((sum - dist)) / float64(sum)
-}
-
-// DistanceForMatrix reads the edit distance off the given Levenshtein matrix.
-func DistanceForMatrix(matrix [][]int) int {
-	return matrix[len(matrix)-1][len(matrix[0])-1]
+	dist := DistanceForMatrix(matrix)
+	return float64(sum-dist) / float64(sum)
 }
 
 // MatrixForStrings generates a 2-D array representing the dynamic programming

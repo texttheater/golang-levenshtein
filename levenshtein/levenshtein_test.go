@@ -139,7 +139,7 @@ func TestDistanceForStrings(t *testing.T) {
 
 func TestRatio(t *testing.T) {
 	for _, testCase := range testCases {
-		ratio := Ratio(
+		ratio := RatioForStrings(
 			[]rune(testCase.source),
 			[]rune(testCase.target),
 			DefaultOptions)
