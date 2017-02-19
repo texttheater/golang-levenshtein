@@ -1,3 +1,10 @@
+// This package implements the Levenshtein algorithm for computing the
+// similarity between two strings. The central function is MatrixForStrings,
+// which computes the Levenshtein matrix. The functions DistanceForMatrix,
+// EditScriptForMatrix and RatioForMatrix read various interesting properties
+// off the matrix. The package also provides the convenience functions
+// DistanceForStrings, EditScriptForStrings and RatioForStrings for going
+// directly from two strings to the property of interest.
 package levenshtein
 
 import (
