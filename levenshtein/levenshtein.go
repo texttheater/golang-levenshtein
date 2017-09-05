@@ -58,19 +58,8 @@ func (operation EditOperation) String() string {
 // DistanceForStrings returns the edit distance between source and target.
 //
 // It has a runtime proportional to len(source) * len(target) and memory use
-// proportional to min(len(source), len(target)).
+// proportional to len(target).
 func DistanceForStrings(source []rune, target []rune, op Options) int {
-	// Our memory use is proportional to the size of target, so ensure target is the smaller.
-	if len(target) > len(source) {
-		target, source = source, target
-		op = Options{
-			InsCost: op.DelCost,
-			DelCost: op.InsCost,
-			SubCost: op.SubCost,
-			Matches: op.Matches, // TODO This assumes Matches is commutative and pure
-		}
-	}
-
 	// We only use the current and previous row, so the matrix height is only 2.
 	height := len(source) + 1
 	width := len(target) + 1
