@@ -134,6 +134,24 @@ func TestDistanceForStrings(t *testing.T) {
 				testCase.distance)
 			t.Fail()
 		}
+		// DistanceForMatrix(MatrixForStrings()) should calculate the same
+		// value as DistanceForStrings.
+		distance = DistanceForMatrix(MatrixForStrings(
+			[]rune(testCase.source),
+			[]rune(testCase.target),
+			DefaultOptions))
+		if distance != testCase.distance {
+			t.Log(
+				"Distance between",
+				testCase.source,
+				"and",
+				testCase.target,
+				"computed as",
+				distance,
+				", should be",
+				testCase.distance)
+			t.Fail()
+		}
 	}
 }
 
