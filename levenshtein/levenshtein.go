@@ -60,7 +60,11 @@ func (operation EditOperation) String() string {
 // It has a runtime proportional to len(source) * len(target) and memory use
 // proportional to len(target).
 func DistanceForStrings(source []rune, target []rune, op Options) int {
-	// We only use the current and previous row, so the matrix height is only 2.
+	// Note: This algorithm is a specialization of MatrixForStrings.
+	// MatrixForStrings returns the full edit matrix. However, we only need a
+	// single value (see DistanceForMatrix) and the main loop of the algorithm
+	// only uses the current and previous row. As such we create a 2D matrix,
+	// but with height 2 (enough to store current and previous row).
 	height := len(source) + 1
 	width := len(target) + 1
 	matrix := make([][]int, 2)
