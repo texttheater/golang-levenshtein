@@ -9,6 +9,7 @@ import (
 var testCases = []struct {
 	source   string
 	target   string
+	options  Options
 	distance int
 	ratio    float64
 	script   EditScript
@@ -16,6 +17,7 @@ var testCases = []struct {
 	{
 		source:   "",
 		target:   "a",
+		options:  DefaultOptions,
 		distance: 1,
 		ratio:    0.0,
 		script:   EditScript{Ins},
@@ -23,6 +25,7 @@ var testCases = []struct {
 	{
 		source:   "a",
 		target:   "aa",
+		options:  DefaultOptions,
 		distance: 1,
 		ratio:    0.6666666666666666,
 		script:   EditScript{Match, Ins},
@@ -30,6 +33,7 @@ var testCases = []struct {
 	{
 		source:   "a",
 		target:   "aaa",
+		options:  DefaultOptions,
 		distance: 2,
 		ratio:    0.5,
 		script:   EditScript{Match, Ins, Ins},
@@ -37,6 +41,7 @@ var testCases = []struct {
 	{
 		source:   "",
 		target:   "",
+		options:  DefaultOptions,
 		distance: 0,
 		ratio:    0,
 		script:   EditScript{},
@@ -44,6 +49,7 @@ var testCases = []struct {
 	{
 		source:   "a",
 		target:   "b",
+		options:  DefaultOptions,
 		distance: 2,
 		ratio:    0,
 		script:   EditScript{Ins, Del},
@@ -51,6 +57,7 @@ var testCases = []struct {
 	{
 		source:   "aaa",
 		target:   "aba",
+		options:  DefaultOptions,
 		distance: 2,
 		ratio:    0.6666666666666666,
 		script:   EditScript{Match, Ins, Match, Del},
@@ -58,6 +65,7 @@ var testCases = []struct {
 	{
 		source:   "aaa",
 		target:   "ab",
+		options:  DefaultOptions,
 		distance: 3,
 		ratio:    0.4,
 		script:   EditScript{Match, Ins, Del, Del},
@@ -65,6 +73,7 @@ var testCases = []struct {
 	{
 		source:   "a",
 		target:   "a",
+		options:  DefaultOptions,
 		distance: 0,
 		ratio:    1,
 		script:   EditScript{Match},
@@ -72,6 +81,7 @@ var testCases = []struct {
 	{
 		source:   "ab",
 		target:   "ab",
+		options:  DefaultOptions,
 		distance: 0,
 		ratio:    1,
 		script:   EditScript{Match, Match},
@@ -79,6 +89,7 @@ var testCases = []struct {
 	{
 		source:   "a",
 		target:   "",
+		options:  DefaultOptions,
 		distance: 1,
 		ratio:    0,
 		script:   EditScript{Del},
@@ -86,6 +97,7 @@ var testCases = []struct {
 	{
 		source:   "aa",
 		target:   "a",
+		options:  DefaultOptions,
 		distance: 1,
 		ratio:    0.6666666666666666,
 		script:   EditScript{Match, Del},
@@ -93,6 +105,7 @@ var testCases = []struct {
 	{
 		source:   "aaa",
 		target:   "a",
+		options:  DefaultOptions,
 		distance: 2,
 		ratio:    0.5,
 		script:   EditScript{Match, Del, Del},
@@ -100,6 +113,7 @@ var testCases = []struct {
 	{
 		source:   "kitten",
 		target:   "sitting",
+		options:  DefaultOptions,
 		distance: 5,
 		ratio:    0.6153846153846154,
 		script: EditScript{
@@ -121,7 +135,7 @@ func TestDistanceForStrings(t *testing.T) {
 		distance := DistanceForStrings(
 			[]rune(testCase.source),
 			[]rune(testCase.target),
-			DefaultOptions)
+			testCase.options)
 		if distance != testCase.distance {
 			t.Log(
 				"Distance between",
@@ -139,7 +153,7 @@ func TestDistanceForStrings(t *testing.T) {
 		distance = DistanceForMatrix(MatrixForStrings(
 			[]rune(testCase.source),
 			[]rune(testCase.target),
-			DefaultOptions))
+			testCase.options))
 		if distance != testCase.distance {
 			t.Log(
 				"Distance between",
@@ -160,7 +174,7 @@ func TestRatio(t *testing.T) {
 		ratio := RatioForStrings(
 			[]rune(testCase.source),
 			[]rune(testCase.target),
-			DefaultOptions)
+			testCase.options)
 		if ratio != testCase.ratio {
 			t.Log(
 				"Ratio between",
@@ -181,7 +195,7 @@ func TestEditScriptForStrings(t *testing.T) {
 		script := EditScriptForStrings(
 			[]rune(testCase.source),
 			[]rune(testCase.target),
-			DefaultOptions)
+			testCase.options)
 		if !equal(script, testCase.script) {
 			t.Log(
 				"Edit script from",
