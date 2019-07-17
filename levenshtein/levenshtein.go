@@ -26,6 +26,12 @@ type EditScript []EditOperation
 
 type MatchFunction func(rune, rune) bool
 
+// IdenticalRunes is the default MatchFunction: it checks whether two runes are
+// identical.
+func IdenticalRunes(a rune, b rune) bool {
+	return a == b
+}
+
 type Options struct {
 	InsCost int
 	DelCost int
@@ -33,15 +39,24 @@ type Options struct {
 	Matches MatchFunction
 }
 
-// DefaultOptions is the default options: insertion cost is 1, deletion cost is
-// 1, substitution cost is 2, and two runes match iff they are the same.
+// DefaultOptions is the default options without substitution: insertion cost
+// is 1, deletion cost is 1, substitution cost is 2 (meaning insert and delete
+// will be used instead), and two runes match iff they are identical.
 var DefaultOptions Options = Options{
 	InsCost: 1,
 	DelCost: 1,
 	SubCost: 2,
-	Matches: func(sourceCharacter rune, targetCharacter rune) bool {
-		return sourceCharacter == targetCharacter
-	},
+	Matches: IdenticalRunes,
+}
+
+// DefaultOptionsWithSub is the default options with substitution: insertion
+// cost is 1, deletion cost is 1, substitution cost is 1, and two runes match
+// iff they are identical.
+var DefaultOptionsWithSub Options = Options{
+	InsCost: 1,
+	DelCost: 1,
+	SubCost: 1,
+	Matches: IdenticalRunes,
 }
 
 func (operation EditOperation) String() string {

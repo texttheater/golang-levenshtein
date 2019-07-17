@@ -128,6 +128,37 @@ var testCases = []struct {
 			Ins,
 		},
 	},
+	{
+		source:   "kitten",
+		target:   "sitting",
+		options:  DefaultOptionsWithSub,
+		distance: 3,
+		ratio:    0.7692307692307693,
+		script: EditScript{
+			Sub,
+			Match,
+			Match,
+			Match,
+			Sub,
+			Match,
+			Ins,
+		},
+	},
+	{
+		source:   "Orange",
+		target:   "Apple",
+		options:  DefaultOptionsWithSub,
+		distance: 5,
+		ratio:    0.5454545454545454,
+		script: EditScript{
+			Sub,
+			Sub,
+			Sub,
+			Sub,
+			Del,
+			Match,
+		},
+	},
 }
 
 func TestDistanceForStrings(t *testing.T) {
