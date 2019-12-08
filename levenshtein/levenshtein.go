@@ -85,13 +85,14 @@ func DistanceForStrings(source []rune, target []rune, op Options) int {
 	matrix := make([][]int, 2)
 
 	// Initialize trivial distances (from/to empty string). That is, fill
-	// the left column and the top row with row/column indices.
+	// the left column and the top row with row/column indices multiplied
+	// by deletion/insertion cost.
 	for i := 0; i < 2; i++ {
 		matrix[i] = make([]int, width)
-		matrix[i][0] = i
+		matrix[i][0] = i * op.DelCost
 	}
 	for j := 1; j < width; j++ {
-		matrix[0][j] = j
+		matrix[0][j] = j * op.InsCost
 	}
 
 	// Fill in the remaining cells: for each prefix pair, choose the
@@ -99,7 +100,7 @@ func DistanceForStrings(source []rune, target []rune, op Options) int {
 	for i := 1; i < height; i++ {
 		cur := matrix[i%2]
 		prev := matrix[(i-1)%2]
-		cur[0] = i
+		cur[0] = i * op.DelCost
 		for j := 1; j < width; j++ {
 			delCost := prev[j] + op.DelCost
 			matchSubCost := prev[j-1]
@@ -160,13 +161,14 @@ func MatrixForStrings(source []rune, target []rune, op Options) [][]int {
 	matrix := make([][]int, height)
 
 	// Initialize trivial distances (from/to empty string). That is, fill
-	// the left column and the top row with row/column indices.
+	// the left column and the top row with row/column indices multiplied
+	// by deletion/insertion cost.
 	for i := 0; i < height; i++ {
 		matrix[i] = make([]int, width)
-		matrix[i][0] = i
+		matrix[i][0] = i * op.DelCost
 	}
 	for j := 1; j < width; j++ {
-		matrix[0][j] = j
+		matrix[0][j] = j * op.InsCost
 	}
 
 	// Fill in the remaining cells: for each prefix pair, choose the

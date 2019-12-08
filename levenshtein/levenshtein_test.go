@@ -159,6 +159,24 @@ var testCases = []struct {
 			Match,
 		},
 	},
+	{
+		source: "me",
+		target: "meme",
+		options: Options{
+			InsCost: 2,
+			DelCost: 1,
+			SubCost: 3,
+			Matches: IdenticalRunes,
+		},
+		distance: 4,
+		ratio:    0.3333333333333333,
+		script: EditScript{
+			Match,
+			Match,
+			Ins,
+			Ins,
+		},
+	},
 }
 
 func TestDistanceForStrings(t *testing.T) {
