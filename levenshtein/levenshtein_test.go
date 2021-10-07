@@ -160,6 +160,31 @@ var testCases = []struct {
 		},
 	},
 	{
+		source:   "ab",
+		target:   "bc",
+		options:  DefaultOptionsWithSub,
+		distance: 2,
+		ratio:    0.5,
+		script: EditScript{
+			Del,
+			Match,
+			Ins,
+		},
+	},
+	{
+		source:   "abd",
+		target:   "bec",
+		options:  DefaultOptionsWithSub,
+		distance: 3,
+		ratio:    0.5,
+		script: EditScript{
+			Del,
+			Match,
+			Sub,
+			Ins,
+		},
+	},
+	{
 		source: "me",
 		target: "meme",
 		options: Options{
